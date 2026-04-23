@@ -66,11 +66,13 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
               child: CircleAvatar(
                 radius: 18.r,
                 backgroundColor: cs.primaryContainer,
-                backgroundImage: user?.photoUrl != null
-                    ? NetworkImage(user!.photoUrl!)
-                    : null,
-                child: user?.photoUrl == null
-                    ? Icon(Icons.person, size: 20.sp, color: cs.onPrimaryContainer)
+                backgroundImage:
+                    user?.photoUrl != null && user!.photoUrl!.isNotEmpty
+                        ? NetworkImage(user.photoUrl!)
+                        : null,
+                child: user?.photoUrl == null || user!.photoUrl!.isEmpty
+                    ? Icon(Icons.person,
+                        size: 20.sp, color: cs.onPrimaryContainer)
                     : null,
               ),
             ),
@@ -124,7 +126,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     );
   }
 
-  Widget _buildChatList(ChatProvider chatProvider, String currentUserId, ColorScheme cs, TextTheme tt) {
+  Widget _buildChatList(ChatProvider chatProvider, String currentUserId,
+      ColorScheme cs, TextTheme tt) {
     return ListView.builder(
       padding: EdgeInsets.symmetric(vertical: AppSpacing.sm.h),
       itemCount: chatProvider.chats.length,
@@ -182,8 +185,10 @@ class _ChatTile extends StatelessWidget {
             CircleAvatar(
               radius: 26.r,
               backgroundColor: cs.primaryContainer,
-              backgroundImage: photo != null ? NetworkImage(photo) : null,
-              child: photo == null
+              backgroundImage: photo != null && photo.isNotEmpty
+                  ? NetworkImage(photo)
+                  : null,
+              child: photo == null || photo.isEmpty
                   ? Text(
                       name.isNotEmpty ? name[0].toUpperCase() : '?',
                       style: tt.titleMedium?.copyWith(
@@ -206,7 +211,8 @@ class _ChatTile extends StatelessWidget {
                         child: Text(
                           name,
                           style: tt.titleSmall?.copyWith(
-                            fontWeight: unread > 0 ? FontWeight.w700 : FontWeight.w500,
+                            fontWeight:
+                                unread > 0 ? FontWeight.w700 : FontWeight.w500,
                             color: cs.onSurface,
                           ),
                           maxLines: 1,
@@ -217,8 +223,11 @@ class _ChatTile extends StatelessWidget {
                         Text(
                           _formatTime(chat.lastMessageTime!),
                           style: tt.labelSmall?.copyWith(
-                            color: unread > 0 ? cs.primary : cs.onSurfaceVariant,
-                            fontWeight: unread > 0 ? FontWeight.w600 : FontWeight.normal,
+                            color:
+                                unread > 0 ? cs.primary : cs.onSurfaceVariant,
+                            fontWeight: unread > 0
+                                ? FontWeight.w600
+                                : FontWeight.normal,
                           ),
                         ),
                     ],
@@ -238,8 +247,12 @@ class _ChatTile extends StatelessWidget {
                             : Text(
                                 lastMsg,
                                 style: tt.bodySmall?.copyWith(
-                                  color: unread > 0 ? cs.onSurface : cs.onSurfaceVariant,
-                                  fontWeight: unread > 0 ? FontWeight.w500 : FontWeight.normal,
+                                  color: unread > 0
+                                      ? cs.onSurface
+                                      : cs.onSurfaceVariant,
+                                  fontWeight: unread > 0
+                                      ? FontWeight.w500
+                                      : FontWeight.normal,
                                 ),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
@@ -248,7 +261,8 @@ class _ChatTile extends StatelessWidget {
                       if (unread > 0) ...[
                         SizedBox(width: 8.w),
                         Container(
-                          padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 6.w, vertical: 2.h),
                           decoration: BoxDecoration(
                             color: cs.primary,
                             borderRadius: BorderRadius.circular(10.r),

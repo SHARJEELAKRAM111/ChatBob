@@ -176,8 +176,8 @@ class _UserTile extends StatelessWidget {
             radius: 24.r,
             backgroundColor: cs.primaryContainer,
             backgroundImage:
-                user.photoUrl != null ? NetworkImage(user.photoUrl!) : null,
-            child: user.photoUrl == null
+                user.photoUrl != null && user.photoUrl!.isNotEmpty ? NetworkImage(user.photoUrl!) : null,
+            child: user.photoUrl == null || user.photoUrl!.isEmpty
                 ? Text(
                     (user.name ?? user.email).isNotEmpty
                         ? (user.name ?? user.email)[0].toUpperCase()

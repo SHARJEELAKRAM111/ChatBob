@@ -28,7 +28,7 @@ class StateWrapper extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (_) => SessionProvider(repository: authRepo),
+          create: (_) => SessionProvider(repository: authRepo, userRepo: userRepo),
         ),
         ChangeNotifierProvider(
           create: (_) => AuthProvider(repository: authRepo),

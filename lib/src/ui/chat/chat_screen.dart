@@ -27,14 +27,16 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
   final ScrollController _scrollController = ScrollController();
   late String _currentUserId;
+  late ChatProvider _chatProvider;
 
   @override
   void initState() {
     super.initState();
     _currentUserId = context.read<SessionProvider>().user?.id ?? '';
+    _chatProvider = context.read<ChatProvider>();
     
     // Open chat: start listening to messages
-    context.read<ChatProvider>().openChat(
+    _chatProvider.openChat(
       chatId: widget.chatId,
       currentUserId: _currentUserId,
       otherUserId: widget.otherUserId,
@@ -43,7 +45,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   void dispose() {
-    context.read<ChatProvider>().closeChat(
+    _chatProvider.closeChat(
       chatId: widget.chatId,
       currentUserId: _currentUserId,
     );
@@ -87,10 +89,10 @@ class _ChatScreenState extends State<ChatScreen> {
             CircleAvatar(
               radius: 18.r,
               backgroundColor: cs.primaryContainer,
-              backgroundImage: widget.otherUserPhoto != null
+              backgroundImage: widget.otherUserPhoto != null && widget.otherUserPhoto!.isNotEmpty
                   ? NetworkImage(widget.otherUserPhoto!)
                   : null,
-              child: widget.otherUserPhoto == null
+              child: widget.otherUserPhoto == null || widget.otherUserPhoto!.isEmpty
                   ? Text(
                       widget.otherUserName.isNotEmpty
                           ? widget.otherUserName[0].toUpperCase()

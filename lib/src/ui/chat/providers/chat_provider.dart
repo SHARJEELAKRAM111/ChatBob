@@ -17,6 +17,14 @@ class ChatProvider extends ChangeNotifier {
   })  : _chatRepo = chatRepo,
         _storageRepo = storageRepo;
 
+  // ── Disposal guard ──
+  bool _isDisposed = false;
+
+  /// Safe wrapper — only notifies if the provider is still alive.
+  void _safeNotify() {
+    if (!_isDisposed) notifyListeners();
+  }
+
   // ── Chat List State ──
   List<ChatModel> _chats = [];
   List<ChatModel> get chats => _chats;
@@ -51,7 +59,7 @@ class ChatProvider extends ChangeNotifier {
     _chatsSub?.cancel();
     _chatsSub = _chatRepo.streamUserChats(userId).listen((chats) {
       _chats = chats;
-      notifyListeners();
+      _safeNotify();
     });
   }
 
@@ -66,14 +74,14 @@ class ChatProvider extends ChangeNotifier {
 
     _messagesSub = _chatRepo.streamMessages(chatId).listen((messages) {
       _messages = messages;
-      notifyListeners();
+      _safeNotify();
     });
 
     _typingSub = _chatRepo
         .streamTypingStatus(chatId: chatId, userId: otherUserId)
         .listen((isTyping) {
       _otherUserTyping = isTyping;
-      notifyListeners();
+      _safeNotify();
     });
 
     // Mark messages as read
@@ -83,14 +91,15 @@ class ChatProvider extends ChangeNotifier {
   /// Close current chat: stop listening to messages and typing.
   void closeChat({required String chatId, required String currentUserId}) {
     _messagesSub?.cancel();
+    _messagesSub = null;
     _typingSub?.cancel();
+    _typingSub = null;
     _messages = [];
     _otherUserTyping = false;
     _currentChat = null;
 
-    // Reset typing
+    // Reset typing on server (fire-and-forget, no notification needed)
     _chatRepo.setTyping(chatId: chatId, userId: currentUserId, isTyping: false);
-    notifyListeners();
   }
 
   /// Get or create a 1-on-1 chat.
@@ -106,7 +115,7 @@ class ChatProvider extends ChangeNotifier {
       (failure) => null,
       (chat) {
         _currentChat = chat;
-        notifyListeners();
+        _safeNotify();
         return chat;
       },
     );
@@ -121,7 +130,7 @@ class ChatProvider extends ChangeNotifier {
     if (text.trim().isEmpty) return;
 
     _isSending = true;
-    notifyListeners();
+    _safeNotify();
 
     final message = MessageModel(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
@@ -138,7 +147,7 @@ class ChatProvider extends ChangeNotifier {
     _chatRepo.setTyping(chatId: chatId, userId: senderId, isTyping: false);
 
     _isSending = false;
-    notifyListeners();
+    _safeNotify();
   }
 
   /// Send an image message.
@@ -148,22 +157,22 @@ class ChatProvider extends ChangeNotifier {
     required File file,
   }) async {
     _isUploading = true;
-    _uploadProgress = 0.0;
-    notifyListeners();
+    _uploadProgress = 0;
+    _safeNotify();
 
     final uploadResult = await _storageRepo.uploadChatImage(
       chatId: chatId,
       file: file,
       onProgress: (progress) {
         _uploadProgress = progress;
-        notifyListeners();
+        _safeNotify();
       },
     );
 
     await uploadResult.fold(
       (failure) async {
         _isUploading = false;
-        notifyListeners();
+        _safeNotify();
       },
       (url) async {
         final message = MessageModel(
@@ -178,8 +187,8 @@ class ChatProvider extends ChangeNotifier {
 
         await _chatRepo.sendMessage(message);
         _isUploading = false;
-        _uploadProgress = 0.0;
-        notifyListeners();
+        _uploadProgress = 0;
+        _safeNotify();
       },
     );
   }
@@ -192,8 +201,8 @@ class ChatProvider extends ChangeNotifier {
     required String fileName,
   }) async {
     _isUploading = true;
-    _uploadProgress = 0.0;
-    notifyListeners();
+    _uploadProgress = 0;
+    _safeNotify();
 
     final uploadResult = await _storageRepo.uploadChatFile(
       chatId: chatId,
@@ -201,14 +210,14 @@ class ChatProvider extends ChangeNotifier {
       fileName: fileName,
       onProgress: (progress) {
         _uploadProgress = progress;
-        notifyListeners();
+        _safeNotify();
       },
     );
 
     await uploadResult.fold(
       (failure) async {
         _isUploading = false;
-        notifyListeners();
+        _safeNotify();
       },
       (url) async {
         final message = MessageModel(
@@ -224,8 +233,8 @@ class ChatProvider extends ChangeNotifier {
 
         await _chatRepo.sendMessage(message);
         _isUploading = false;
-        _uploadProgress = 0.0;
-        notifyListeners();
+        _uploadProgress = 0;
+        _safeNotify();
       },
     );
   }
@@ -242,6 +251,7 @@ class ChatProvider extends ChangeNotifier {
 
   @override
   void dispose() {
+    _isDisposed = true;
     _chatsSub?.cancel();
     _messagesSub?.cancel();
     _typingSub?.cancel();

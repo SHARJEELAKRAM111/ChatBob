@@ -15,7 +15,7 @@ class AuthService {
       return {
         'id': user.uid,
         'email': user.email ?? '',
-        'name': user.displayName ?? '',
+        'name': (user.displayName?.isNotEmpty ?? false) ? user.displayName : null,
         'photoUrl': user.photoURL,
       };
     });
@@ -35,7 +35,7 @@ class AuthService {
       return {
         'id': user.uid,
         'email': user.email ?? '',
-        'name': user.displayName ?? '',
+        'name': (user.displayName?.isNotEmpty ?? false) ? user.displayName : null,
         'photoUrl': user.photoURL,
       };
     }, requiresNetwork: true);
@@ -82,7 +82,7 @@ class AuthService {
       return {
         'id': user.uid,
         'email': user.email ?? '',
-        'name': user.displayName ?? '',
+        'name': (user.displayName?.isNotEmpty ?? false) ? user.displayName : null,
         'photoUrl': user.photoURL,
       };
     });
