@@ -10,7 +10,7 @@ Future<void> main() async {
   await EasyLocalization.ensureInitialized();
   //await dotenv.load(fileName: '.env');
 
-  await AppConfig.init();
+  //await AppConfig.init();
 
   runApp(
     const LocalizationWrapper(

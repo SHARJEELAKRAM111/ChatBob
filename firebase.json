@@ -1,0 +1,25 @@
+{
+    "flutter": {
+        "platforms": {
+            "android": {
+                "default": {
+                    "projectId": "chatbob-bed9e",
+                    "appId": "1:1085309164472:android:0e73f7bdac289477f5cd4d",
+                    "fileOutput": "android/app/google-services.json"
+                }
+            },
+            "dart": {
+                "lib/firebase_options.dart": {
+                    "projectId": "chatbob-bed9e",
+                    "configurations": {
+                        "android": "1:1085309164472:android:0e73f7bdac289477f5cd4d",
+                        "ios": "1:1085309164472:ios:0d790f5ae9127f32f5cd4d",
+                        "macos": "1:1085309164472:ios:0d790f5ae9127f32f5cd4d",
+                        "web": "1:1085309164472:web:dcd8835c2b62b4fff5cd4d",
+                        "windows": "1:1085309164472:web:10b7beb40bf67f82f5cd4d"
+                    }
+                }
+            }
+        }
+    }
+}

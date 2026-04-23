@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1085309164472",
+    "project_id": "chatbob-bed9e",
+    "storage_bucket": "chatbob-bed9e.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1085309164472:android:0e73f7bdac289477f5cd4d",
+        "android_client_info": {
+          "package_name": "com.example.chatbot_chatapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDAkm1soDSSBz05pFcg-uXYZTNCx-HrWkY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

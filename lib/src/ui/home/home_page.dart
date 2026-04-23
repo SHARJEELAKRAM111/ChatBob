@@ -3,7 +3,6 @@ import 'package:chatbob/src/imports/packages_imports.dart';
 
 import 'package:chatbob/src/ui/auth/providers/session_provider.dart';
 
-
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
@@ -30,7 +29,7 @@ class HomePage extends StatelessWidget {
             children: [
               Icon(
                 Icons.home_rounded,
-                                size: 60.sp,
+                size: 60.sp,
                 color: colorScheme.primary,
               ),
               SizedBox(height: AppSpacing.lg.h),
@@ -43,16 +42,18 @@ class HomePage extends StatelessWidget {
                   fontSize: 28.sp,
                 ),
               ),
-                            SizedBox(height: AppSpacing.md.h),
+              SizedBox(height: AppSpacing.md.h),
               Text(
-                user?.email != null && user?.name != null ? user!.email : ('home.home_subtitle'.tr()),
+                user?.email != null && user?.name != null
+                    ? user!.email
+                    : ('home.home_subtitle'.tr()),
                 textAlign: TextAlign.center,
                 style: textTheme.bodyMedium?.copyWith(
                   color: colorScheme.onSurfaceVariant,
                   fontSize: 14.sp,
                 ),
               ),
-                          ],
+            ],
           ),
         ),
       ),
