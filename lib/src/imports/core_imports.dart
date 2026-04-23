@@ -21,3 +21,6 @@ export '../ui/auth/signup_screen.dart';
 export '../ui/auth/forgot_password_screen.dart';
 export '../ui/home/home_page.dart';
 export '../ui/onboarding/onboarding_page.dart';
+export '../ui/chat/chat_screen.dart';
+export '../ui/contacts/contacts_screen.dart';
+export '../ui/profile/profile_screen.dart';

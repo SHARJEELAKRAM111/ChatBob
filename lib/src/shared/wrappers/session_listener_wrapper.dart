@@ -13,19 +13,28 @@ class SessionListenerWrapper extends StatefulWidget {
 }
 
 class _SessionListenerWrapperState extends State<SessionListenerWrapper> {
+  SessionStatus? _lastStatus;
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     final session = Provider.of<SessionProvider>(context);
-    if (session.status != SessionStatus.unknown) {
+    
+    if (session.status != SessionStatus.unknown && session.status != _lastStatus) {
+      _lastStatus = session.status;
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (!mounted) return;
+        
         FlutterNativeSplash.remove();
+        
+        final navigator = rootNavigatorKey.currentState;
+        if (navigator == null) return;
+
         if (session.status == SessionStatus.authenticated) {
-          Navigator.pushReplacementNamed(context, AppRoutes.home);
-                  } else if (session.status == SessionStatus.unauthenticated) {
-          Navigator.pushReplacementNamed(context, AppRoutes.onboarding);
-                  }
+          navigator.pushReplacementNamed(AppRoutes.home);
+        } else if (session.status == SessionStatus.unauthenticated) {
+          navigator.pushReplacementNamed(AppRoutes.onboarding);
+        }
       });
     }
   }

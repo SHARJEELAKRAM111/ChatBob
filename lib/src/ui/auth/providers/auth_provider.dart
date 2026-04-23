@@ -30,9 +30,7 @@ class AuthProvider extends ChangeNotifier {
         showToast(context, message: failure.message, status: 'error');
       },
       (user) {
-        if (context.mounted) {
-          Navigator.pushReplacementNamed(context, AppRoutes.home);
-        }
+        // Navigation is handled by SessionListenerWrapper
       },
     );
   }
@@ -53,9 +51,7 @@ class AuthProvider extends ChangeNotifier {
         showToast(context, message: failure.message, status: 'error');
       },
       (user) {
-        if (context.mounted) {
-          Navigator.pushReplacementNamed(context, AppRoutes.home);
-        }
+        // Navigation is handled by SessionListenerWrapper
       },
     );
   }

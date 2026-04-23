@@ -3,9 +3,11 @@ import 'package:chatbob/src/imports/packages_imports.dart';
 
 import 'package:chatbob/src/data/models/user_model.dart';
 import 'package:chatbob/src/data/repositories/auth_repository.dart';
+import 'package:chatbob/src/data/repositories/user_repository_impl.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   final AuthService _authService = AuthService.instance;
+  final UserRepositoryImpl _userRepo = UserRepositoryImpl();
 
   @override
   Stream<AppUser?> get onAuthStateChanged {
@@ -64,7 +66,11 @@ class AuthRepositoryImpl implements AuthRepository {
         id: userData['id'], 
         email: userData['email'] ?? email, 
         name: name,
+        createdAt: DateTime.now().millisecondsSinceEpoch,
       );
+
+      // Save user profile to Realtime Database
+      _userRepo.saveUserProfile(user);
       
       return right(user);
     });

@@ -7,6 +7,9 @@ import 'package:chatbob/src/ui/auth/forgot_password_screen.dart';
 
 import 'package:chatbob/src/ui/home/home_page.dart';
 import 'package:chatbob/src/ui/onboarding/onboarding_page.dart';
+import 'package:chatbob/src/ui/chat/chat_screen.dart';
+import 'package:chatbob/src/ui/contacts/contacts_screen.dart';
+import 'package:chatbob/src/ui/profile/profile_screen.dart';
 
 
 class AppRouter {
@@ -35,6 +38,27 @@ class AppRouter {
       case AppRoutes.home:
         return MaterialPageRoute(
           builder: (_) => const HomePage(),
+          settings: settings,
+        );
+      case AppRoutes.chat:
+        final args = settings.arguments as Map<String, dynamic>;
+        return MaterialPageRoute(
+          builder: (_) => ChatScreen(
+            chatId: args['chatId'] as String,
+            otherUserId: args['otherUserId'] as String,
+            otherUserName: args['otherUserName'] as String,
+            otherUserPhoto: args['otherUserPhoto'] as String?,
+          ),
+          settings: settings,
+        );
+      case AppRoutes.contacts:
+        return MaterialPageRoute(
+          builder: (_) => const ContactsScreen(),
+          settings: settings,
+        );
+      case AppRoutes.profile:
+        return MaterialPageRoute(
+          builder: (_) => const ProfileScreen(),
           settings: settings,
         );
       default:
