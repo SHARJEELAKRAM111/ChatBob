@@ -66,7 +66,8 @@ class ChatModel extends Equatable {
   /// Get the other participant's name
   String otherUserName(String currentUserId) {
     final otherId = otherUserId(currentUserId);
-    return participantNames[otherId] ?? 'Unknown';
+    final name = participantNames[otherId];
+    return (name != null && name.isNotEmpty) ? name : 'Unknown';
   }
 
   /// Get the other participant's photo URL

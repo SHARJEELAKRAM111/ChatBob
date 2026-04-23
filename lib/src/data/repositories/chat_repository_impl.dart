@@ -23,10 +23,27 @@ class ChatRepositoryImpl implements ChatRepository {
     return runTask(() async {
       final chatId = _generateChatId(currentUser.id, otherUser.id);
 
+      // Helper: get display name (never empty)
+      String displayName(AppUser u) =>
+          (u.name != null && u.name!.isNotEmpty) ? u.name! : u.email;
+
       // Check if chat already exists
       final snapshot = await _db.read('chats/$chatId');
       if (snapshot.exists && snapshot.value != null) {
+        // Refresh participant names & photos with latest data
+        await _db.update('chats/$chatId', {
+          'participantNames/${currentUser.id}': displayName(currentUser),
+          'participantNames/${otherUser.id}': displayName(otherUser),
+          'participantPhotos/${currentUser.id}': currentUser.photoUrl,
+          'participantPhotos/${otherUser.id}': otherUser.photoUrl,
+        });
+
         final data = Map<String, dynamic>.from(snapshot.value as Map);
+        // Return with refreshed names
+        data['participantNames'] = {
+          currentUser.id: displayName(currentUser),
+          otherUser.id: displayName(otherUser),
+        };
         return ChatModel.fromMap(data, chatId: chatId);
       }
 
@@ -39,8 +56,8 @@ class ChatRepositoryImpl implements ChatRepository {
           otherUser.id: true,
         },
         participantNames: {
-          currentUser.id: currentUser.name ?? currentUser.email,
-          otherUser.id: otherUser.name ?? otherUser.email,
+          currentUser.id: displayName(currentUser),
+          otherUser.id: displayName(otherUser),
         },
         participantPhotos: {
           currentUser.id: currentUser.photoUrl,

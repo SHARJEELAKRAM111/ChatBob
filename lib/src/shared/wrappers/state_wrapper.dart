@@ -8,6 +8,7 @@ import '../../ui/auth/providers/auth_provider.dart';
 import '../../ui/chat/providers/chat_provider.dart';
 import '../../ui/contacts/providers/contacts_provider.dart';
 import '../../ui/profile/providers/profile_provider.dart';
+import '../../ui/theme/theme_provider.dart';
 
 /// A wrapper to initialize the chosen State Management library.
 class StateWrapper extends StatelessWidget {
@@ -27,6 +28,9 @@ class StateWrapper extends StatelessWidget {
 
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider(
+          create: (_) => ThemeProvider(),
+        ),
         ChangeNotifierProvider(
           create: (_) => SessionProvider(repository: authRepo, userRepo: userRepo),
         ),

@@ -3,6 +3,7 @@ import 'package:chatbob/src/imports/core_imports.dart';
 import 'package:chatbob/src/imports/packages_imports.dart';
 import 'package:chatbob/src/ui/auth/providers/session_provider.dart';
 import 'package:chatbob/src/ui/profile/providers/profile_provider.dart';
+import 'package:chatbob/src/ui/theme/theme_provider.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -225,7 +226,66 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ),
 
-            SizedBox(height: AppSpacing.xxxl.h),
+            SizedBox(height: AppSpacing.xl.h),
+
+            // ── Theme Mode ──
+            Container(
+              width: double.infinity,
+              padding: EdgeInsets.all(16.w),
+              decoration: BoxDecoration(
+                color: cs.surfaceContainerHighest.withValues(alpha: 0.3),
+                borderRadius: BorderRadius.circular(12.r),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Appearance',
+                    style: tt.labelMedium?.copyWith(
+                      color: cs.onSurfaceVariant,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  SizedBox(height: 12.h),
+                  Consumer<ThemeProvider>(
+                    builder: (context, themeProv, _) {
+                      return Row(
+                        children: [
+                          _ThemeChip(
+                            icon: Icons.light_mode_rounded,
+                            label: 'Light',
+                            isSelected: themeProv.isLightMode,
+                            onTap: () => themeProv.setThemeMode(ThemeMode.light),
+                            cs: cs,
+                            tt: tt,
+                          ),
+                          SizedBox(width: 8.w),
+                          _ThemeChip(
+                            icon: Icons.dark_mode_rounded,
+                            label: 'Dark',
+                            isSelected: themeProv.isDarkMode,
+                            onTap: () => themeProv.setThemeMode(ThemeMode.dark),
+                            cs: cs,
+                            tt: tt,
+                          ),
+                          SizedBox(width: 8.w),
+                          _ThemeChip(
+                            icon: Icons.settings_suggest_rounded,
+                            label: 'System',
+                            isSelected: themeProv.isSystemMode,
+                            onTap: () => themeProv.setThemeMode(ThemeMode.system),
+                            cs: cs,
+                            tt: tt,
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ),
+
+            SizedBox(height: AppSpacing.xl.h),
 
             // Logout button
             SizedBox(
@@ -282,6 +342,62 @@ class _ProfileScreenState extends State<ProfileScreen> {
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12.r),
             borderSide: BorderSide(color: cs.primary, width: 1.5),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _ThemeChip extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final bool isSelected;
+  final VoidCallback onTap;
+  final ColorScheme cs;
+  final TextTheme tt;
+
+  const _ThemeChip({
+    required this.icon,
+    required this.label,
+    required this.isSelected,
+    required this.onTap,
+    required this.cs,
+    required this.tt,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: GestureDetector(
+        onTap: onTap,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          padding: EdgeInsets.symmetric(vertical: 10.h),
+          decoration: BoxDecoration(
+            color: isSelected ? cs.primary.withValues(alpha: 0.15) : Colors.transparent,
+            borderRadius: BorderRadius.circular(10.r),
+            border: Border.all(
+              color: isSelected ? cs.primary : cs.outlineVariant,
+              width: isSelected ? 1.5 : 1,
+            ),
+          ),
+          child: Column(
+            children: [
+              Icon(
+                icon,
+                size: 20.sp,
+                color: isSelected ? cs.primary : cs.onSurfaceVariant,
+              ),
+              SizedBox(height: 4.h),
+              Text(
+                label,
+                style: tt.labelSmall?.copyWith(
+                  color: isSelected ? cs.primary : cs.onSurfaceVariant,
+                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+                ),
+              ),
+            ],
           ),
         ),
       ),

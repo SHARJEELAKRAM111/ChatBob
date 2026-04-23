@@ -1,4 +1,6 @@
 import 'package:chatbob/src/imports/core_imports.dart';
+import 'package:chatbob/src/imports/packages_imports.dart';
+import 'package:chatbob/src/ui/theme/theme_provider.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -13,12 +15,14 @@ class App extends StatelessWidget {
   }
 
   Widget _buildMaterialApp(BuildContext context) {
+    final themeMode = context.watch<ThemeProvider>().themeMode;
+
     return MaterialApp(
       title: 'ChatBob',
       debugShowCheckedModeBanner: false,
       theme: buildLightTheme(primaryColorHex: '#6750A4'),
       darkTheme: buildDarkTheme(primaryColorHex: '#6750A4'),
-      themeMode: ThemeMode.system,
+      themeMode: themeMode,
       navigatorKey: rootNavigatorKey,
       initialRoute: AppRoutes.home,
       onGenerateRoute: AppRouter.onGenerateRoute,

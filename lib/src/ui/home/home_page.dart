@@ -3,6 +3,7 @@ import 'package:chatbob/src/imports/packages_imports.dart';
 import 'package:chatbob/src/data/models/chat_model.dart';
 import 'package:chatbob/src/ui/auth/providers/session_provider.dart';
 import 'package:chatbob/src/ui/chat/providers/chat_provider.dart';
+import 'package:chatbob/src/ui/theme/theme_provider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -55,6 +56,15 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         ),
         centerTitle: false,
         actions: [
+          IconButton(
+            icon: Icon(
+              context.watch<ThemeProvider>().isDarkMode
+                  ? Icons.light_mode_rounded
+                  : Icons.dark_mode_rounded,
+              color: cs.onSurface,
+            ),
+            onPressed: () => context.read<ThemeProvider>().toggleTheme(),
+          ),
           IconButton(
             icon: Icon(Icons.search_rounded, color: cs.onSurface),
             onPressed: () {},
